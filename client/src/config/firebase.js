@@ -70,7 +70,6 @@ export const onAuthStateChanged = (callback) => {
  * @name signIn
  */
 export const signIn = ({ email, password, callbacks }) => {
-  console.log('fire signIn', email, password, callbacks);
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then(() => {
       if (callbacks && callbacks.then) callbacks.then();
@@ -85,7 +84,6 @@ export const signIn = ({ email, password, callbacks }) => {
  * @name logOut
  */
 export const logOut = (callbacks) => {
-  console.log('fore logout');
   firebase.auth().signOut()
     .then(() => {
       if (callbacks && callbacks.then) callbacks.then();
