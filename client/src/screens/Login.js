@@ -18,6 +18,8 @@ import {
   loadingAction,
 } from '../actions';
 
+import Spinner from '../components/Spinner';
+
 const styles = {
   container: {
     display: 'flex',
@@ -111,9 +113,9 @@ class Login extends Component {
     const isAdmin = Object.keys(admin).length > 0;
 
     if (!isAdmin && loading) {
-      return (<h2>Loading ...</h2>);
+      return (<Spinner />);
     } else if (isAdmin && !loading) {
-      return (<Redirect to='/admins' />);
+      return (<Redirect to='/salers' />);
     }
 
     return (

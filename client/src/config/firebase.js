@@ -92,3 +92,18 @@ export const logOut = (callbacks) => {
       if (callbacks && callbacks.catch) callbacks.catch(error);
     });
 };
+
+export const getRegisters = (name, callbacks) => {
+  const ref = firebase.database().ref();
+  console.log('getRegisters => ', ref);
+    /* .then(
+      snapshot => {
+        callbacks.then(snapshot);
+      }
+    )
+    .catch(
+      error => {
+        callbacks.catch(error);
+      }
+    ); */
+}

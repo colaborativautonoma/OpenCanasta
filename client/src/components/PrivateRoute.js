@@ -23,6 +23,9 @@ import {
   sectionAction,
 } from '../actions';
 
+import Spinner from './Spinner';
+import ModalNewSaler from '../components/modals/ModalNewSaler';
+
 const styles = {
   container: {},
   appBar: {
@@ -32,6 +35,13 @@ const styles = {
 };
 
 class PrivateRoute extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openModalNewSaler: false
+    };
+  }
+
   componentWillMount() {
     const { setAdmin, setLoading, admin } = this.props;
     const isNotAdmin = Object.keys(admin).length <= 0;
@@ -54,42 +64,77 @@ class PrivateRoute extends Component {
     history.push('/login');
   }
 
+  renderModalNewSaler() {
+    return (
+      <ModalNewSaler
+        open={this.state.openModalNewSaler}
+        close={() => this.setState({ openModalNewSaler: false })}
+      />
+    );
+  }
+
   renderToolbar() {
     const { history, section } = this.props;
     return (
       <Toolbar style={{ backgroundColor: '#3F51B5' }}>
         <ToolbarGroup>
-          <FlatButton onClick={() => history.push('/salers')} style={{ color: '#FFF' }}>
+          <span
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#FFF',
+              textTransform: 'uppercase'
+            }}
+          >
+            Canasta Campesina
+          </span>
+        </ToolbarGroup>
+
+        <ToolbarGroup>
+          <FlatButton
+            onClick={() => this.setState({ openModalNewSaler: true })}
+            style={{ color: '#FFF' }}
+          >
             <span
               style={{
-                padding: section === 'salers' ? 10: 'auto',
-                borderRadius: section === 'salers' ? 4 : 0,
-                backgroundColor: section === 'salers' ? '#424242': '#3F51B5'
+                padding: 10,
+                borderRadius: 4,
+                backgroundColor: '#757575'
               }}
             >
-              Vendedores
+              Agregar vendedor
             </span>
           </FlatButton>
         </ToolbarGroup>
 
         <ToolbarGroup>
-          <FlatButton onClick={() => history.push('/admins')} style={{ color: '#FFF' }}>
+          <FlatButton onClick={() => console.log('add product')} style={{ color: '#FFF' }}>
             <span
               style={{
-                padding: section === 'admins' ? 10: 'auto',
-                borderRadius: section === 'admins' ? 4 : 0,
-                backgroundColor: section === 'admins' ? '#424242': '#3F51B5'
+                padding: 10,
+                borderRadius: 4,
+                backgroundColor: '#757575'
               }}
             >
-              Administradores
+              Agregar producto
             </span>
           </FlatButton>
-        </ToolbarGroup>
+        </ToolbarGroup>       
 
         <ToolbarGroup>
-          <ToolbarSeparator style={{ backgroundColor: '#FFF' }} />
           <FlatButton onClick={() => this.logOut()} style={{ color: '#FFF' }}>
-            <strong>Salir</strong>
+            <span
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: '#FFF',
+                backgroundColor: '#F44336',
+                padding: 10,
+                borderRadius: 7
+              }}
+            >
+              Salir
+            </span>
           </FlatButton>
         </ToolbarGroup>
       </Toolbar>
@@ -100,7 +145,7 @@ class PrivateRoute extends Component {
     const { admin, children, setLoading, loading, location } = this.props;
     const isAdmin = Object.keys(admin).length > 0;
     if (!isAdmin && loading) {
-      return <h2>Loading App ...</h2>
+      return <Spinner />
     } else if (!isAdmin && !loading) {
       return (<Redirect to='/login' />);
     }
@@ -108,6 +153,7 @@ class PrivateRoute extends Component {
     return (
       <div>
         {this.renderToolbar()}
+        {this.renderModalNewSaler()}
         {children}
       </div>
     );
@@ -122,14 +168,12 @@ PrivateRoute.propTypes = {
   setAdmin: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   setLoading: PropTypes.func.isRequired,
-  section: PropTypes.string.isRequired,
   setSection: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   admin: state.admin,
-  loading: state.loading,
-  section: state.section,
+  loading: state.loading
 });
 
 const mapDispatchToProps = dispatch => ({

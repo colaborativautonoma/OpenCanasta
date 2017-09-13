@@ -1,22 +1,85 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import EditIcon from 'material-ui/svg-icons/image/edit';
+import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
+import AddIcon from 'material-ui/svg-icons/social/person-add';
+
 import PrivateRoute from '../components/PrivateRoute';
 
 import {
-  sectionAction,
+  sectionAction
 } from '../actions';
+
+import { getRegisters } from '../config/firebase';
 
 const styles = {
   container: {
-    padding: 40,
+    padding: '5%',
   },
 };
 
 class Salers extends Component {
-  componentWillMount() {
-    const { setSection } = this.props;
-    setSection('salers');
+  renderSalers() {
+    const { salers } = this.props;
+    if (salers.length === 0) {
+      return (
+        <TableRow>
+          <TableRowColumn>No hay productores</TableRowColumn>
+        </TableRow>
+      );
+    }
+    return salers.map((ad, index) => (
+      <TableRow key={index}>
+        <TableRowColumn>{ad.email}</TableRowColumn>
+        <TableRowColumn>{ad.password}</TableRowColumn>
+        <TableRowColumn>
+          <FlatButton
+            icon={<EditIcon />}
+          />
+          <FlatButton
+            icon={<DeleteIcon />}
+          />
+        </TableRowColumn>
+      </TableRow>
+    ));
+  }
+
+  renderTable() {
+    return (
+      <Table>
+        <TableHeader
+          displaySelectAll={false}
+          adjustForCheckbox={false}
+        >
+          <TableRow>
+            <TableHeaderColumn>Nombre</TableHeaderColumn>
+            <TableHeaderColumn>Contraseña</TableHeaderColumn>
+            <TableHeaderColumn>
+              Acciones
+            </TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody
+          displayRowCheckbox={false}
+        >
+          {this.renderSalers()}
+        </TableBody>
+      </Table>
+    );
+  }
+
+  getSalers() {
+    console.log('getSalers');
   }
 
   render() {
@@ -27,8 +90,7 @@ class Salers extends Component {
         location={location}
       >
         <div style={styles.container}>
-          admin: {JSON.stringify(this.props.admin)} <br />
-          <strong>Salers</strong>
+          {this.renderTable()}
         </div>
       </PrivateRoute>
     );
@@ -38,18 +100,18 @@ class Salers extends Component {
 Salers.propTypes = {
   history: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,
-  setSection: PropTypes.func.isRequired,
+  salers: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
-  section: state.section,
   admin: state.admin,
+  salers: state.salers,
 });
 
 const mapDispatchToProps = dispatch => ({
-  setSection(section) {
-    return dispatch(sectionAction(section));
-  },
+  setSalers(section) {
+    return dispatch(salersAction(section));
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Salers);

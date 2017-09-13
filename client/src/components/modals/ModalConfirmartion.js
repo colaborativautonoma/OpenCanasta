@@ -15,6 +15,7 @@ const ModalConfirmation = ({ title, open, callbacks }) => {
   ];
   return (
     <Dialog
+      contentStyle={{ width: 350 }}
       title={title}
       modal
       open={open}
