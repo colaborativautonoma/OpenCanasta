@@ -1,6 +1,6 @@
 import { ACTIONS } from '../actions';
 
-export default (state = false, action) => {
+export default (state = true, action) => {
   const { type, payload } = action;
   switch (type) {
     case ACTIONS.SET_LOADING:

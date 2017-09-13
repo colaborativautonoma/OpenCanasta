@@ -10,11 +10,12 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import FlatButton from 'material-ui/FlatButton';
-import EditIcon from 'material-ui/svg-icons/communication/comment';
+import EditIcon from 'material-ui/svg-icons/image/edit';
 import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 import AddIcon from 'material-ui/svg-icons/social/person-add';
 
-import LoginSwitch from '../components/LoginSwitch';
+import PrivateRoute from '../components/PrivateRoute';
+import ModalConfirmation from '../components/modals/ModalConfirmartion';
 
 import {
   sectionAction,
@@ -28,6 +29,13 @@ const styles = {
 };
 
 class Admins extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openModalConfirmation: false
+    };
+  }
+
   componentWillMount() {
     const { setSection } = this.props;
     setSection('admins');
@@ -58,6 +66,19 @@ class Admins extends Component {
     ));
   }
 
+  renderModalNewAdmin() {
+    return (
+      <ModalConfirmation
+        title='TITLE TEST'
+        open={this.state.openModalConfirmation}
+        callbacks={{
+          cancel: () => this.setState({ openModalConfirmation: false }),
+          accept: () => this.setState({ openModalConfirmation: false })
+        }}
+      />
+    );
+  }
+
   renderTable() {
     return (
       <Table>
@@ -72,6 +93,7 @@ class Admins extends Component {
               Acciones
               <FlatButton
                 icon={<AddIcon />}
+                onClick={() => this.setState({ openModalConfirmation: true })}
               />
             </TableHeaderColumn>
           </TableRow>
@@ -86,15 +108,18 @@ class Admins extends Component {
   }
 
   render() {
-    const { history } = this.props;
+    const { history, location } = this.props;
     return (
-      <LoginSwitch
+      <PrivateRoute
         history={history}
+        location={location}
       >
         <div style={styles.container}>
           {this.renderTable()}
+
+          {this.renderModalNewAdmin()}
         </div>
-      </LoginSwitch>
+      </PrivateRoute>
     );
   }
 }
@@ -103,11 +128,13 @@ Admins.propTypes = {
   history: PropTypes.object.isRequired,
   setSection: PropTypes.func.isRequired,
   admins: PropTypes.array.isRequired,
+  admin: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   section: state.section,
   admins: state.admins,
+  admin: state.admin,
 });
 
 const mapDispatchToProps = dispatch => ({

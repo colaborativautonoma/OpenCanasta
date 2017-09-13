@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import LoginSwitch from '../components/LoginSwitch';
+import PrivateRoute from '../components/PrivateRoute';
 
 const Clients = ({ history }) => {
   return (
-    <LoginSwitch
+    <PrivateRoute
       history={history}
     >
       <div>
         <h1>Clients</h1>
       </div>
-    </LoginSwitch>
+    </PrivateRoute>
   );
 };
 

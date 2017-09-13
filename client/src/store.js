@@ -3,7 +3,7 @@ import reducers from './reducers';
 
 const initialValues = {
   admin: {},
-  loading: false,
+  loading: true,
   section: 'salers',
   salers: [],
   admins: [

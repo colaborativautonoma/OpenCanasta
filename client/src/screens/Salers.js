@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import LoginSwitch from '../components/LoginSwitch';
-
-/* import {
-  onAuthStateChanged,
-  logOut,
-} from '../config/firebase'; */
+import PrivateRoute from '../components/PrivateRoute';
 
 import {
   sectionAction,
@@ -25,26 +20,30 @@ class Salers extends Component {
   }
 
   render() {
-    const { history } = this.props;
+    const { history, location } = this.props;
     return (
-      <LoginSwitch
+      <PrivateRoute
         history={history}
+        location={location}
       >
         <div style={styles.container}>
+          admin: {JSON.stringify(this.props.admin)} <br />
           <strong>Salers</strong>
         </div>
-      </LoginSwitch>
+      </PrivateRoute>
     );
   }
 }
 
 Salers.propTypes = {
   history: PropTypes.object.isRequired,
+  admin: PropTypes.object.isRequired,
   setSection: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   section: state.section,
+  admin: state.admin,
 });
 
 const mapDispatchToProps = dispatch => ({

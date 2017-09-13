@@ -47,24 +47,38 @@ class Login extends Component {
     this.state = {
       email: 'test@gmail.com',
       password: 'abc123',
+      disableForm: false
     };
+  }
+
+  componentWillMount() {
+    const { setAdmin, admin, setLoading } = this.props;
+    const isNotAdmin = Object.keys(admin).length <= 0;
+    setLoading(true); 
+    if (isNotAdmin) {
+      onAuthStateChanged((user) => {
+        if (user) {
+          setAdmin(user);
+        }
+        setLoading(false);
+      });
+    } else {
+      this.setState({ disabled: true });
+    }
   }
 
   login() {
     const { email, password } = this.state;
     const { setLoading, setAdmin } = this.props;
 
-    setLoading(true);
     signIn({
       email,
       password,
       callbacks: {
         then: () => {
-          setLoading(false);
           onAuthStateChanged((user) => {
             if (user) {
               setAdmin(user);
-              
             }
           });
         },
@@ -77,12 +91,12 @@ class Login extends Component {
 
   renderButtons() {
     const { email, password } = this.state;
-    const { loading } = this.props;
+    const { loading, disableForm } = this.props;
     return (
       <div>
         <FlatButton
           label="Ingresar"
-          disabled={email.length === 0 || password.length === 0}
+          disabled={(email.length === 0 || password.length === 0) || loading || disableForm}
           onClick={() => this.login()}
         />
 
@@ -91,8 +105,17 @@ class Login extends Component {
     );
   }
 
-  renderComponent() {
-    const { email, password } = this.state;
+  render() {
+    const { email, password, disableForm } = this.state;
+    const { admin, location, loading } = this.props;
+    const isAdmin = Object.keys(admin).length > 0;
+
+    if (!isAdmin && loading) {
+      return (<h2>Loading ...</h2>);
+    } else if (isAdmin && !loading) {
+      return (<Redirect to='/admins' />);
+    }
+
     return (
       <div style={styles.container}>
         <Card style={styles.card}>
@@ -109,6 +132,7 @@ class Login extends Component {
               hintText="Correo electrónico"
               value={email}
               onChange={(e, v) => this.setState({ email: v })}
+              disabled={disableForm}
             />
 
             <TextField
@@ -118,6 +142,7 @@ class Login extends Component {
               value={password}
               type="password"
               onChange={(e, v) => this.setState({ password: v })}
+              disabled={disableForm}
             />
           </CardText>
 
@@ -128,19 +153,11 @@ class Login extends Component {
       </div>
     );
   }
-
-  render() {
-    const { admin, setLoading } = this.props;
-    if (Object.keys(admin).length > 0) {
-      setLoading(false);
-      return <Redirect to="/salers" />;
-    }
-    return this.renderComponent();
-  }
 }
 
 Login.propTypes = {
   admin: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
   setLoading: PropTypes.func.isRequired,
   setAdmin: PropTypes.func.isRequired,
