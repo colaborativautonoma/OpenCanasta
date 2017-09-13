@@ -115,7 +115,7 @@ class Login extends Component {
     if (!isAdmin && loading) {
       return (<Spinner />);
     } else if (isAdmin && !loading) {
-      return (<Redirect to='/salers' />);
+      return (<Redirect to='/admin' />);
     }
 
     return (

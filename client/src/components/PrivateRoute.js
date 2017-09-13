@@ -24,6 +24,7 @@ import {
 } from '../actions';
 
 import Spinner from './Spinner';
+import ModalNewProduct from '../components/modals/ModalNewProduct';
 import ModalNewSaler from '../components/modals/ModalNewSaler';
 
 const styles = {
@@ -38,7 +39,8 @@ class PrivateRoute extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      openModalNewSaler: false
+      openModalNewProduct: false,
+      openModalNewSaler: false,
     };
   }
 
@@ -55,6 +57,7 @@ class PrivateRoute extends Component {
         setLoading(false);
       });
     }
+
   }
 
   logOut() {
@@ -64,17 +67,30 @@ class PrivateRoute extends Component {
     history.push('/login');
   }
 
+  renderModalNewProduct() {
+    // getOnly id and name of saler (dont take products)
+    const filteredSalers = this.props.salers.map(sal => ({ id: sal.id, name: sal.name }));
+    return (
+      <ModalNewProduct
+        open={this.state.openModalNewProduct}
+        close={() => this.setState({ openModalNewProduct: false })}
+        salers={filteredSalers}
+      />
+    );
+  }
+
   renderModalNewSaler() {
     return (
       <ModalNewSaler
         open={this.state.openModalNewSaler}
         close={() => this.setState({ openModalNewSaler: false })}
+        salers={this.props.salers.length}
       />
     );
   }
 
   renderToolbar() {
-    const { history, section } = this.props;
+    const { history, section, admin } = this.props;
     return (
       <Toolbar style={{ backgroundColor: '#3F51B5' }}>
         <ToolbarGroup>
@@ -86,58 +102,34 @@ class PrivateRoute extends Component {
               textTransform: 'uppercase'
             }}
           >
-            Canasta Campesina
+            Canasta Campesina <span style={{ textTransform: 'lowercase', fontWeight: 'normal' }}>({admin.email})</span>
           </span>
         </ToolbarGroup>
-
-        <ToolbarGroup>
-          <FlatButton
-            onClick={() => this.setState({ openModalNewSaler: true })}
-            style={{ color: '#FFF' }}
-          >
-            <span
-              style={{
-                padding: 10,
-                borderRadius: 4,
-                backgroundColor: '#757575'
-              }}
-            >
-              Agregar vendedor
-            </span>
-          </FlatButton>
-        </ToolbarGroup>
-
-        <ToolbarGroup>
-          <FlatButton onClick={() => console.log('add product')} style={{ color: '#FFF' }}>
-            <span
-              style={{
-                padding: 10,
-                borderRadius: 4,
-                backgroundColor: '#757575'
-              }}
-            >
-              Agregar producto
-            </span>
-          </FlatButton>
-        </ToolbarGroup>       
-
-        <ToolbarGroup>
-          <FlatButton onClick={() => this.logOut()} style={{ color: '#FFF' }}>
-            <span
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: '#FFF',
-                backgroundColor: '#F44336',
-                padding: 10,
-                borderRadius: 7
-              }}
-            >
-              Salir
-            </span>
-          </FlatButton>
-        </ToolbarGroup>
       </Toolbar>
+    );
+  }
+
+  renderFab() {
+    return (
+      <div>
+        <div className="fixed-action-btn">
+          <a className="btn-floating btn-large red" onClick={() => this.logOut()}>
+            <i className="large material-icons">exit_to_app</i>
+          </a>
+        </div>
+
+        <div className="fixed-action-btn" style={{ marginBottom: 85 }}>
+          <a className="btn-floating btn-large blue" onClick={() => this.setState({ openModalNewProduct: true })}>
+            <i className="large material-icons">add_shopping_cart</i>
+          </a>
+        </div>
+
+        <div className="fixed-action-btn" style={{ marginBottom: 145 }}>
+          <a className="btn-floating btn-large green" onClick={() => this.setState({ openModalNewSaler: true })}>
+            <i className="large material-icons">person_add</i>
+          </a>
+        </div>
+      </div>
     );
   }
 
@@ -153,8 +145,11 @@ class PrivateRoute extends Component {
     return (
       <div>
         {this.renderToolbar()}
+        {this.renderModalNewProduct()}
         {this.renderModalNewSaler()}
         {children}
+
+        {this.renderFab()}
       </div>
     );
   }
@@ -168,12 +163,13 @@ PrivateRoute.propTypes = {
   setAdmin: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   setLoading: PropTypes.func.isRequired,
-  setSection: PropTypes.func.isRequired,
+  salers: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({
   admin: state.admin,
-  loading: state.loading
+  loading: state.loading,
+  salers: state.salers
 });
 
 const mapDispatchToProps = dispatch => ({

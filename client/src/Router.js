@@ -9,7 +9,7 @@ const Router = () => {
   return (
     <div>
       <Route exact component={Login} path="/login" />
-      <Route exact component={Salers} path="/salers" />
+      <Route exact component={Salers} path="/admin" />
       <Route exact component={Clients} path="/clients" />
       {/*<Route render={() => (<Redirect to='/login' />)} />*/}
     </div>

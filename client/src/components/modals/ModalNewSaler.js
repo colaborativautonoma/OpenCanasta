@@ -11,43 +11,45 @@ class ModalNewSaler extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      saler: '',
-      product: '',
-      unit: '',
-      price: '',
-      number: '',
-      disableForm: false
+      salerName: '',
+      disableForm: false,
     };
   }
 
   addSaler() {
-    console.log('addSaler');
+    const { close, salers } = this.props;
+    const { salerName } = this.state;
+    const newData = { name: salerName };
+    this.setState({ disableForm: true })
+    addRegister(
+      'salers',
+      newData,
+      error => {
+        if (error) {
+          console.log('error add saler', error)
+        } else {
+          this.resetStates();
+          close();
+        }
+      }
+    );
   }
 
   resetStates() {
     this.setState({
-      saler: '',
-      product: '',
-      unit: '',
-      price: '',
-      number: '',
+      salerName: '',
       disableForm: false
     });
   }
 
   render() {
     const { close, open } = this.props;
-    const { saler, product, unit, price, number, disableForm } = this.state;
-    const disableButton = (
-      saler.length === 0 ||
-      product.length === 0 ||
-      unit.length === 0 ||
-      price.length === 0 ||
-      number.length === 0
-    );
+    const { salerName, disableForm } = this.state;
+    const disableButton = salerName.length === 0;
     const actions = [
       <FlatButton
         label='Cancelar'
+        disabled={disableForm}
         onClick={() => {
           close();
           this.resetStates();
@@ -55,7 +57,7 @@ class ModalNewSaler extends Component {
       />,
       <FlatButton
         label='Agregar'
-        disabled={disableButton}
+        disabled={disableButton || disableForm}
         onClick={() => this.addSaler()}
       />
     ];
@@ -69,46 +71,10 @@ class ModalNewSaler extends Component {
       >
         <TextField
           fullWidth
-          floatingLabelText="Productor"
-          hintText="Productor"
-          value={saler}
-          onChange={(e, v) => this.setState({ saler: v })}
-          disabled={disableForm}
-        />
-
-        <TextField
-          fullWidth
-          floatingLabelText="Producto"
-          hintText="Producto"
-          value={product}
-          onChange={(e, v) => this.setState({ product: v })}
-          disabled={disableForm}
-        />
-
-        <TextField
-          fullWidth
-          floatingLabelText="Unidad"
-          hintText="Unidad"
-          value={unit}
-          onChange={(e, v) => this.setState({ unit: v })}
-          disabled={disableForm}
-        />
-
-        <TextField
-          fullWidth
-          floatingLabelText="Precio"
-          hintText="Precio"
-          value={price}
-          onChange={(e, v) => this.setState({ price: v })}
-          disabled={disableForm}
-        />
-
-        <TextField
-          fullWidth
-          floatingLabelText="Cantidad disponible"
-          hintText="Cantidad disponible"
-          value={number}
-          onChange={(e, v) => this.setState({ number: v })}
+          floatingLabelText="Nombre del productor"
+          hintText="Nombre del productor"
+          value={salerName}
+          onChange={(e, v) => this.setState({ salerName: v })}
           disabled={disableForm}
         />
       </Dialog>
@@ -118,7 +84,8 @@ class ModalNewSaler extends Component {
 
 ModalNewSaler.propTypes = {
   open: PropTypes.bool.isRequired,
-  close: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired,
+  salers: PropTypes.number.isRequired
 };
 
 export default ModalNewSaler;

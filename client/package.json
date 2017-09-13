@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --hot --progress --colors --devtool eval-source --content-base src/ --history-api-fallback",
-    "build": "mkdir -p dist && cp src/index.html dist/index.html && webpack --progress --watch --colors"
+    "dev": "cp -r src/lib dist && webpack-dev-server --inline --hot --progress --colors --devtool eval-source --content-base src/ --history-api-fallback",
+    "build": "mkdir -p dist && cp src/index.html dist/index.html && cp -r src/lib dist && webpack --progress --watch --colors"
   },
   "keywords": [],
   "author": "",

@@ -17,7 +17,8 @@ import AddIcon from 'material-ui/svg-icons/social/person-add';
 import PrivateRoute from '../components/PrivateRoute';
 
 import {
-  sectionAction
+  sectionAction,
+  salersAction
 } from '../actions';
 
 import { getRegisters } from '../config/firebase';
@@ -29,6 +30,22 @@ const styles = {
 };
 
 class Salers extends Component {
+  componentWillMount() {
+    const { setSalers } = this.props;
+    getRegisters('salers', snapshot => {
+      const objectSalers = snapshot.val();
+      let updatedSalers = [];
+      if (objectSalers !== null) {
+        updatedSalers = Object.keys(objectSalers).map(key => {
+          const tmpObj = objectSalers[key];
+          tmpObj.id = key;
+          return tmpObj;
+        });
+      }
+      setSalers(updatedSalers);
+    });
+  }
+
   renderSalers() {
     const { salers } = this.props;
     if (salers.length === 0) {
@@ -38,10 +55,10 @@ class Salers extends Component {
         </TableRow>
       );
     }
-    return salers.map((ad, index) => (
+    return salers.map((sal, index) => (
       <TableRow key={index}>
-        <TableRowColumn>{ad.email}</TableRowColumn>
-        <TableRowColumn>{ad.password}</TableRowColumn>
+        <TableRowColumn>{sal.name}</TableRowColumn>
+        <TableRowColumn>0</TableRowColumn>
         <TableRowColumn>
           <FlatButton
             icon={<EditIcon />}
@@ -63,7 +80,7 @@ class Salers extends Component {
         >
           <TableRow>
             <TableHeaderColumn>Nombre</TableHeaderColumn>
-            <TableHeaderColumn>Contraseña</TableHeaderColumn>
+            <TableHeaderColumn>Productos ofertados</TableHeaderColumn>
             <TableHeaderColumn>
               Acciones
             </TableHeaderColumn>

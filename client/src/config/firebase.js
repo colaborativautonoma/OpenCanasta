@@ -46,14 +46,17 @@ export const removeRegister = ({ name, id }) => {
  * @name addRegister
  * @description add new register
  */
-export const addRegister = ({ name, newRegister, callbacks }) => {
-  firebase.database().ref(name).push(newRegister)
-    .then(() => {
-      if (callbacks.then) callbacks.then();
-    })
-    .catch((error) => {
-      if (callbacks.catch) callbacks.catch(error);
-    });
+export const addRegister = (name, newRegister, callback) => {
+  firebase.database().ref().child(name).push(newRegister, error => callback(error))
+};
+
+/**
+ * @function
+ * @name addProductToSaler
+ * @description add new product
+ */
+export const addProductToSaler = (idSaler, newProduct, callback) => {
+  firebase.database().ref().child('salers').child(idSaler).push(newProduct, error => callback(error))
 };
 
 /**
@@ -93,17 +96,7 @@ export const logOut = (callbacks) => {
     });
 };
 
-export const getRegisters = (name, callbacks) => {
-  const ref = firebase.database().ref();
-  console.log('getRegisters => ', ref);
-    /* .then(
-      snapshot => {
-        callbacks.then(snapshot);
-      }
-    )
-    .catch(
-      error => {
-        callbacks.catch(error);
-      }
-    ); */
+export const getRegisters = (name, callback) => {
+  const ref = firebase.database().ref().child(name);
+  ref.on('value', snapshot => callback(snapshot))
 }
