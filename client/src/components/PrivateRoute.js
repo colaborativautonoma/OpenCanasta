@@ -148,7 +148,6 @@ class PrivateRoute extends Component {
         {this.renderModalNewProduct()}
         {this.renderModalNewSaler()}
         {children}
-
         {this.renderFab()}
       </div>
     );
@@ -156,7 +155,7 @@ class PrivateRoute extends Component {
 }
 
 PrivateRoute.propTypes = {
-  children: PropTypes.object.isRequired,
+  children: PropTypes.array.isRequired,
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,

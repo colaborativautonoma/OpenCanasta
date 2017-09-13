@@ -63,7 +63,7 @@ class Salers extends Component {
         open={this.state.openModalConfirmation}
         callbacks={{
           accept: () => {
-            this.removeRegister(this.state.idToRemove);
+            removeRegister('salers', this.state.idToRemove);
             this.setState({ openModalConfirmation: false })
           },
           cancel: () => this.setState({ openModalConfirmation: false }),
@@ -146,7 +146,7 @@ class Salers extends Component {
 Salers.propTypes = {
   history: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,
-  salers: PropTypes.object.isRequired,
+  salers: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = state => ({
