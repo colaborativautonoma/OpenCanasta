@@ -37,8 +37,8 @@ export const updateRegister = ({ name, id, newData, callbacks }) => {
  * @name removeRegister
  * @description remove register by reference and id
  */
-export const removeRegister = ({ name, id }) => {
-  firebase.database().ref(`${name}/${id}`).remove();
+export const removeRegister = (name, id) => {
+  firebase.database().ref().child(name).child(id).remove();
 };
 
 /**
@@ -56,7 +56,7 @@ export const addRegister = (name, newRegister, callback) => {
  * @description add new product
  */
 export const addProductToSaler = (idSaler, newProduct, callback) => {
-  firebase.database().ref().child('salers').child(idSaler).push(newProduct, error => callback(error))
+  firebase.database().ref().child('salers').child(idSaler).child('products').push(newProduct, error => callback(error))
 };
 
 /**

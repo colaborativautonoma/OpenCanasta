@@ -15,13 +15,14 @@ import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 import AddIcon from 'material-ui/svg-icons/social/person-add';
 
 import PrivateRoute from '../components/PrivateRoute';
+import ModalConfirmation from '../components/modals/ModalConfirmation';
 
 import {
   sectionAction,
   salersAction
 } from '../actions';
 
-import { getRegisters } from '../config/firebase';
+import { getRegisters, removeRegister } from '../config/firebase';
 
 const styles = {
   container: {
@@ -30,6 +31,14 @@ const styles = {
 };
 
 class Salers extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      openModalConfirmation: false,
+      idToRemove: null,
+    };
+  }
+
   componentWillMount() {
     const { setSalers } = this.props;
     getRegisters('salers', snapshot => {
@@ -42,8 +51,25 @@ class Salers extends Component {
           return tmpObj;
         });
       }
+      console.log('salers', updatedSalers);
       setSalers(updatedSalers);
     });
+  }
+
+  renderModalConfirmation() {
+    return (
+      <ModalConfirmation
+        title='¿Desea remover este productor/a y todos sus productos?'
+        open={this.state.openModalConfirmation}
+        callbacks={{
+          accept: () => {
+            this.removeRegister(this.state.idToRemove);
+            this.setState({ openModalConfirmation: false })
+          },
+          cancel: () => this.setState({ openModalConfirmation: false }),
+        }}
+      />
+    );
   }
 
   renderSalers() {
@@ -58,14 +84,19 @@ class Salers extends Component {
     return salers.map((sal, index) => (
       <TableRow key={index}>
         <TableRowColumn>{sal.name}</TableRowColumn>
-        <TableRowColumn>0</TableRowColumn>
+        <TableRowColumn>{`${sal.products === null ? 'Sin' : Object.keys(sal.products).length} producto(s) disponible(s)`}</TableRowColumn>
         <TableRowColumn>
-          <FlatButton
-            icon={<EditIcon />}
-          />
-          <FlatButton
-            icon={<DeleteIcon />}
-          />
+          <div style={{ marginLeft: -30 }}>
+            <FlatButton
+              icon={<EditIcon />}
+            />
+            <FlatButton
+              icon={<DeleteIcon />}
+              onClick={() => {
+                this.setState({ openModalConfirmation: true, idToRemove: sal.id });
+              }}
+            />
+          </div>
         </TableRowColumn>
       </TableRow>
     ));
@@ -95,10 +126,6 @@ class Salers extends Component {
     );
   }
 
-  getSalers() {
-    console.log('getSalers');
-  }
-
   render() {
     const { history, location } = this.props;
     return (
@@ -109,6 +136,8 @@ class Salers extends Component {
         <div style={styles.container}>
           {this.renderTable()}
         </div>
+
+        {this.renderModalConfirmation()}
       </PrivateRoute>
     );
   }
@@ -117,7 +146,7 @@ class Salers extends Component {
 Salers.propTypes = {
   history: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,
-  salers: PropTypes.array.isRequired,
+  salers: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({

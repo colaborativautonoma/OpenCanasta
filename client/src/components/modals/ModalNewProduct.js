@@ -4,6 +4,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import {
   addProductToSaler
@@ -23,8 +25,10 @@ class ModalNewProduct extends Component {
   }
 
   addProduct(id) {
-    const newProduct = this.state;
+    const newProduct = {...this.state};
     delete newProduct.disableForm;
+    delete newProduct.saler;
+    this.setState({ disableForm: true });
     addProductToSaler(
       id,
       newProduct,
@@ -33,7 +37,7 @@ class ModalNewProduct extends Component {
           console.log('error add product', error)
         } else {
           this.resetStates();
-          close();
+          this.props.close();
         }
       }
     );
@@ -53,7 +57,6 @@ class ModalNewProduct extends Component {
   render() {
     const { close, open, salers } = this.props;
     const { saler, product, unit, price, number, disableForm } = this.state;
-    console.log('MODAL NEW PREODUCT', salers);
     const disableButton = (
       saler.length === 0 ||
       product.length === 0 ||
@@ -61,7 +64,7 @@ class ModalNewProduct extends Component {
       price.length === 0 ||
       number.length === 0
     );
-    const actions = [
+    const buttonActions = [
       <FlatButton
         label='Cancelar'
         onClick={() => {
@@ -72,9 +75,18 @@ class ModalNewProduct extends Component {
       <FlatButton
         label='Agregar'
         disabled={disableButton}
-        onClick={() => this.addProduct()}
+        onClick={() => this.addProduct(saler)}
       />
     ];
+    let actions;
+    if (disableForm) {
+      actions = [
+        <CircularProgress />
+      ];
+    } else {
+      actions = buttonActions;
+    }
+
     return (
       <Dialog
         title='Nuevo Producto'
@@ -84,24 +96,23 @@ class ModalNewProduct extends Component {
         actions={actions}
         open={open}
       >
-        <TextField
-          fullWidth
-          floatingLabelText="Productor"
-          hintText="Productor"
-          value={saler}
-          onChange={(e, v) => this.setState({ saler: v })}
-          disabled={disableForm}
-        />
-
         <SelectField
-          floatingLabelText="Productor"
-          value={saler.length <= 0 ? null : saler}
-          onChange={(e, v) => this.setState({ saler: v })}
+          disabled={disableForm}
+          floatingLabelText="Productor/a"
+          value={saler.length > 0 ? saler : null}
+          onChange={(e, i, v) => {
+            let newProduct;
+            if (v === null) {
+              newProduct = '';
+            } else {
+              newProduct = v;
+            }
+            this.setState({ saler: newProduct })
+          }}
         >
-          <MenuItem value={null} primaryText="Seleccione un/a productor/a" />
           {
-            saler.map((saler, index) => (
-              <MenuItem value={saler.id} primaryText={saler.name} />
+            salers.map((saler, index) => (
+              <MenuItem key={index} value={saler.id} primaryText={saler.name} />
             ))
           }
         </SelectField>
