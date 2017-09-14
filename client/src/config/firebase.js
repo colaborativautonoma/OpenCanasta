@@ -22,8 +22,8 @@ export const initApp = () => {
  * @name setDataOnReference
  * @description set specific register by reference name
  */
-export const updateRegister = ({ name, newData, callback }) => {
-  firebase.database().ref().child(name).set(newData, error => callback(error));
+export const updateRegister = (name, id, newData, callback) => {
+  firebase.database().ref().child(name).child(id).set(newData, error => callback(error));
 };
 
 /**
