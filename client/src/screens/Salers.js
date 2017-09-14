@@ -13,13 +13,15 @@ import FlatButton from 'material-ui/FlatButton';
 import EditIcon from 'material-ui/svg-icons/image/edit';
 import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 import AddIcon from 'material-ui/svg-icons/social/person-add';
+import CircularProgress from 'material-ui/CircularProgress';
 
 import PrivateRoute from '../components/PrivateRoute';
 import ModalConfirmation from '../components/modals/ModalConfirmation';
+import ModalEditProduct from '../components/modals/ModalEditProduct';
 
 import {
-  sectionAction,
-  salersAction
+  salersAction,
+  loadingAction
 } from '../actions';
 
 import { getRegisters, removeRegister } from '../config/firebase';
@@ -35,7 +37,9 @@ class Salers extends Component {
     super(props);
     this.state = {
       openModalConfirmation: false,
+      openModalEditProduct: false,
       idToRemove: null,
+      salerToEdit: null,
     };
   }
 
@@ -51,7 +55,6 @@ class Salers extends Component {
           return tmpObj;
         });
       }
-      console.log('salers', updatedSalers);
       setSalers(updatedSalers);
     });
   }
@@ -71,9 +74,19 @@ class Salers extends Component {
       />
     );
   }
+  
+  renderModalEditProduct() {
+    return (
+      <ModalEditProduct
+        open={this.state.openModalEditProduct}
+        close={() => this.setState({ openModalEditProduct: false })}
+        saler={this.state.salerToEdit === null ? {} : this.state.salerToEdit}
+      />
+    );
+  }
 
   renderSalers() {
-    const { salers } = this.props;
+    const { salers, loading } = this.props;
     if (salers.length === 0) {
       return (
         <TableRow>
@@ -84,11 +97,14 @@ class Salers extends Component {
     return salers.map((sal, index) => (
       <TableRow key={index}>
         <TableRowColumn>{sal.name}</TableRowColumn>
-        <TableRowColumn>{`${sal.products === null ? 'Sin' : Object.keys(sal.products).length} producto(s) disponible(s)`}</TableRowColumn>
+        <TableRowColumn>{`${(sal.products === null || sal.products === undefined) ? 'Sin' : Object.keys(sal.products).length} producto(s) disponible(s)`}</TableRowColumn>
         <TableRowColumn>
           <div style={{ marginLeft: -30 }}>
             <FlatButton
               icon={<EditIcon />}
+              onClick={() => {
+                this.setState({ openModalEditProduct: true, salerToEdit: sal });
+              }}
             />
             <FlatButton
               icon={<DeleteIcon />}
@@ -138,6 +154,8 @@ class Salers extends Component {
         </div>
 
         {this.renderModalConfirmation()}
+        {this.renderModalEditProduct()}
+
       </PrivateRoute>
     );
   }
@@ -147,16 +165,18 @@ Salers.propTypes = {
   history: PropTypes.object.isRequired,
   admin: PropTypes.object.isRequired,
   salers: PropTypes.array.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   admin: state.admin,
   salers: state.salers,
+  loading: state.loading,
 });
 
 const mapDispatchToProps = dispatch => ({
-  setSalers(section) {
-    return dispatch(salersAction(section));
+  setSalers(salers) {
+    return dispatch(salersAction(salers));
   }
 });
 
