@@ -14,6 +14,8 @@ import {
   updateRegister
 } from '../../config/firebase';
 
+import FormEditProduct from '../FormEditProduct';
+
 class ModalEditProduct extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +23,8 @@ class ModalEditProduct extends Component {
       saler: null,
       disableForm: true,
       isSubmiting: false,
-      idProductToEdit: null
+      idProductToEdit: null,
+      currentProduct: null
     };
   }
 
@@ -35,7 +38,9 @@ class ModalEditProduct extends Component {
     this.setState({
       saler: null,
       disableForm: true,
-      isSubmiting: false
+      isSubmiting: false,
+      currentProduct: null,
+      idProductToEdit: null
     });
   }
 
@@ -43,6 +48,7 @@ class ModalEditProduct extends Component {
     this.editProduct();
     const salerModified = {...this.state.saler};
     delete salerModified.id;
+    salerModified.products[this.state.idProductToEdit] = {...this.state.currentProduct};
     updateRegister(
       'salers',
       this.state.saler.id,
@@ -66,40 +72,45 @@ class ModalEditProduct extends Component {
   showRadioButtons(products) {
     const { disableForm } = this.state;
     return (
-      <RadioButtonGroup
-        name="productToEdit"
-        defaultSelected={null}
-        style={{ display: 'flex' }}
-        onChange={(event, value) => {
-          this.showProductToEdit(value);
-        }}
-      >
-        {
-          Object.keys(products).map(key => 
-            (
-              <RadioButton
-                key={key}
-                value={key}
-                label={products[key].product}
-                disabled={disableForm}
-                checkedIcon={<ActionFavorite style={{color: '#F44336'}} />}
-                uncheckedIcon={<ActionFavoriteBorder />}
-                style={{
-                  maxWidth: 250,
-                  marginTop: 16,
-                  marginBottom: 16
-                }}
-              />
+      <div>
+        <RadioButtonGroup
+          name="productToEdit"
+          defaultSelected={null}
+          style={{ display: 'flex' }}
+          onChange={(event, value) => {
+            this.setState({
+              idProductToEdit: value,
+              currentProduct: this.props.saler.products[value]
+            });
+          }}
+        >
+          {
+            Object.keys(products).map(key => 
+              (
+                <RadioButton
+                  key={key}
+                  value={key}
+                  label={products[key].product}
+                  disabled={disableForm}
+                  checkedIcon={<ActionFavorite style={{color: '#F44336'}} />}
+                  uncheckedIcon={<ActionFavoriteBorder />}
+                  style={{
+                    maxWidth: 250,
+                    marginTop: 16,
+                    marginBottom: 16
+                  }}
+                />
+              )
             )
-          )
-        }
-      </RadioButtonGroup>
-    );
-  }
+          }
+        </RadioButtonGroup>
 
-  showProductToEdit() {
-    return (
-      <h3>id: {id}</h3>
+        <FormEditProduct
+          product={this.state.currentProduct}
+          disabled={disableForm}
+          onChange={p => this.setState({ currentProduct: p })}
+        />
+      </div>
     );
   }
 
@@ -108,7 +119,6 @@ class ModalEditProduct extends Component {
     if (saler.products) {
       return (
         this.showRadioButtons(saler.products)
-        // this.showProductToEdit()
       )
     } else {
       return (
