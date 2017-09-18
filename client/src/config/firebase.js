@@ -92,5 +92,12 @@ export const logOut = (callbacks) => {
 
 export const getRegisters = (name, callback) => {
   const ref = firebase.database().ref().child(name);
-  ref.on('value', snapshot => callback(snapshot))
+  ref.on('value', snapshot => callback(snapshot));
 }
+
+export const buyProduct = (idSaler, idProduct) => {
+  const ref = firebase.database().ref().child('salers').child(idSaler).child('products').child(idProduct);
+  // Add info to buys object
+
+  // Modify product number (-1)
+};

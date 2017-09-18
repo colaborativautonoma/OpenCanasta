@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "start": "cp -r src/lib dist && webpack-dev-server --inline --hot --progress --colors --devtool eval-source --content-base src/ --history-api-fallback",
-    "build": "mkdir -p dist && cp src/index.html dist/index.html && cp -r src/lib dist && webpack --progress --watch --colors"
+    "build": "mkdir -p dist && cp src/index.html dist/index.html && cp -r src/lib dist && webpack --progress --watch --colors",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@kadira/storybook": "^2.21.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -32,6 +35,7 @@
   "dependencies": {
     "firebase": "^4.3.1",
     "material-ui": "^0.19.1",
+    "numeral": "^2.0.6",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
