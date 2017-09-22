@@ -81,7 +81,7 @@ class Clients extends Component {
           if (currentProduct.number > 0) {
             return (
               <TableRow key={key}>
-                <TableRowColumn><b>{salerName}</b></TableRowColumn>
+                <TableRowColumn style={{ width: 200 }}><b>{salerName}</b></TableRowColumn>
                 <TableRowColumn>{currentProduct.product}</TableRowColumn>
                 <TableRowColumn>{currentProduct.number}</TableRowColumn>
                 <TableRowColumn>{currentProduct.unit}</TableRowColumn>
@@ -129,7 +129,7 @@ class Clients extends Component {
             adjustForCheckbox={false}
           >
             <TableRow>
-              <TableHeaderColumn>Productor</TableHeaderColumn>
+              <TableHeaderColumn style={{ width: 200 }}>Productor</TableHeaderColumn>
               <TableHeaderColumn>Producto</TableHeaderColumn>
               <TableHeaderColumn>Disponibles</TableHeaderColumn>
               <TableHeaderColumn>Unidad</TableHeaderColumn>

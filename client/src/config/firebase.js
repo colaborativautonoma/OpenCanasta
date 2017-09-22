@@ -104,8 +104,13 @@ export const buyProduct = (saler, idProduct, newQ, client) => {
     client,
     quantity: newQ,
     saler: saler.id,
-    product: idProduct
+    product: idProduct,
+    ready: false
   };
   refReserve.push(newReserve, () => null);
 };
 
+export const markProductAsReady = (reserve) => {
+  const refProduct = firebase.database().ref().child('reserves').child(reserve);
+  refProduct.update({ ready: true });
+}; 
