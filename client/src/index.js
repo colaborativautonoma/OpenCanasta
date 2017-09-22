@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import App from './components/App';
 
@@ -19,3 +20,6 @@ render(
   </MuiThemeProvider>,
   document.querySelector('#root'),
 );
+
+
+registerServiceWorker();

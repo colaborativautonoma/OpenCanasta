@@ -19,8 +19,7 @@ import {
 
 import {
   adminAction,
-  loadingAction,
-  sectionAction,
+  loadingAction
 } from '../actions';
 
 import Spinner from './Spinner';
@@ -195,10 +194,7 @@ const mapDispatchToProps = dispatch => ({
   },
   setLoading(loading) {
     return dispatch(loadingAction(loading));
-  },
-  setSection(section) {
-    return dispatch(sectionAction(section));
-  },
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute);

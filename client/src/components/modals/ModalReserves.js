@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import {List, ListItem} from 'material-ui/List';
-import Divider from 'material-ui/Divider';
 import CheckIcon from 'material-ui/svg-icons/toggle/radio-button-checked';
 
 import {
