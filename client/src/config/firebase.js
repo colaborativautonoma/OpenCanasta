@@ -95,9 +95,17 @@ export const getRegisters = (name, callback) => {
   ref.on('value', snapshot => callback(snapshot));
 }
 
-export const buyProduct = (idSaler, idProduct, lastQ, newQ, client) => {
-  const refBuy = firebase.database().ref().child('salers').child(idSaler).child('products').child(idProduct);
+export const buyProduct = (saler, idProduct, newQ, client) => {
+  const refBuy = firebase.database().ref().child('salers').child(saler.id).child('products').child(idProduct);
   const refReserve = firebase.database().ref().child('reserves');
-  refBuy.update({ number: lastQ - newQ });
-  refReserve.push({ client, quantity: newQ }, () => null);
+  refBuy.update({ number: saler.product.number - newQ });
+
+  const newReserve = {
+    client,
+    quantity: newQ,
+    saler: saler.id,
+    product: idProduct
+  };
+  refReserve.push(newReserve, () => null);
 };
+

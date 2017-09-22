@@ -26,6 +26,7 @@ import {
 import Spinner from './Spinner';
 import ModalNewProduct from '../components/modals/ModalNewProduct';
 import ModalNewSaler from '../components/modals/ModalNewSaler';
+import ModalReserves from '../components/modals/ModalReserves';
 
 const styles = {
   container: {},
@@ -41,6 +42,7 @@ class PrivateRoute extends Component {
     this.state = {
       openModalNewProduct: false,
       openModalNewSaler: false,
+      openModalReserves: false
     };
   }
 
@@ -89,6 +91,15 @@ class PrivateRoute extends Component {
     );
   }
 
+  renderModalReservers() {
+    return (
+      <ModalReserves
+        open={this.state.openModalReserves}
+        close={() => this.setState({ openModalReserves: false })}
+      />
+    );
+  }
+
   renderToolbar() {
     const { history, section, admin } = this.props;
     return (
@@ -129,6 +140,12 @@ class PrivateRoute extends Component {
             <i className="large material-icons">person_add</i>
           </a>
         </div>
+
+        <div className="fixed-action-btn" style={{ marginBottom: 210 }}>
+          <a className="btn-floating btn-large orange" onClick={() => this.setState({ openModalReserves: true })}>
+            <i className="large material-icons">format_list_bulleted</i>
+          </a>
+        </div>
       </div>
     );
   }
@@ -147,6 +164,7 @@ class PrivateRoute extends Component {
         {this.renderToolbar()}
         {this.renderModalNewProduct()}
         {this.renderModalNewSaler()}
+        {this.renderModalReservers()}
         {children}
         {this.renderFab()}
       </div>

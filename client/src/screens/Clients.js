@@ -77,30 +77,30 @@ class Clients extends Component {
       }
       if (saler.products !== null) {
         return Object.keys(saler.products).map((key, sIndex) => {
-          if (sIndex > 0) {
-            salerName = '';
-          }
           const currentProduct = saler.products[key];
-          return (
-            <TableRow key={key}>
-              <TableRowColumn><b>{salerName}</b></TableRowColumn>
-              <TableRowColumn>{currentProduct.product}</TableRowColumn>
-              <TableRowColumn>{currentProduct.number}</TableRowColumn>
-              <TableRowColumn>{currentProduct.unit}</TableRowColumn>
-              <TableRowColumn>{numeral(parseInt(currentProduct.price)).format('$0,0')}</TableRowColumn>
-              <TableRowColumn>
-                <IconButton
-                  onClick={() => this.setState({
-                    openModalBuy: true,
-                    idProduct: key,
-                    saler: { id: saler.id, product: saler.products[key] }
-                  })}
-                >
-                  <ShopingIcon />
-                </IconButton>
-              </TableRowColumn>
-            </TableRow>
-          )
+          if (currentProduct.number > 0) {
+            return (
+              <TableRow key={key}>
+                <TableRowColumn><b>{salerName}</b></TableRowColumn>
+                <TableRowColumn>{currentProduct.product}</TableRowColumn>
+                <TableRowColumn>{currentProduct.number}</TableRowColumn>
+                <TableRowColumn>{currentProduct.unit}</TableRowColumn>
+                <TableRowColumn>{numeral(parseInt(currentProduct.price)).format('$0,0')}</TableRowColumn>
+                <TableRowColumn>
+                  <IconButton
+                    onClick={() => this.setState({
+                      openModalBuy: true,
+                      idProduct: key,
+                      saler: { id: saler.id, name: saler.name, product: saler.products[key] }
+                    })}
+                  >
+                    <ShopingIcon />
+                  </IconButton>
+                </TableRowColumn>
+              </TableRow>
+            )
+          }
+          return null;
         })
       }
     });

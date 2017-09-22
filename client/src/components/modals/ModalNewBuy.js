@@ -21,9 +21,8 @@ class ModalNewBuy extends Component {
 
   buy() {
     buyProduct(
-      this.props.saler.id,
+      this.props.saler,
       this.props.idProduct,
-      this.props.saler.product.number,
       this.props.quantity,
       this.state.client
     );

@@ -4,7 +4,8 @@ import reducers from './reducers';
 const initialValues = {
   admin: {},
   loading: true,
-  salers: []
+  salers: [],
+  reserves: []
 };
 
 const store = createStore(reducers, initialValues);
