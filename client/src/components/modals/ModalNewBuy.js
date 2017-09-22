@@ -12,13 +12,39 @@ import {
 } from '../../config/firebase';
 
 class ModalNewBuy extends Component {
-  buyProduct() {
-    console.log('buyProduct');
+  constructor(props) {
+    super(props);
+    this.state = {
+      client: ''
+    };
+  }
+
+  buy() {
+    buyProduct(
+      this.props.saler.id,
+      this.props.idProduct,
+      this.props.saler.product.number,
+      this.props.quantity,
+      this.state.client
+    );
   }
 
   render() {
-    const { close, open, quantity } = this.props;
-    const disableButton = quantity.length === 0;
+    const { close, open, quantity, saler } = this.props;
+    let disableButton = false;
+    let showMessage = false;
+    if (quantity.length === 0) {
+      disableButton = true;
+    } else if (saler.product === undefined) {
+      disableButton = true;
+    } else {
+      if (parseInt(quantity) > saler.product.number) {
+        disableButton = true;
+        showMessage = true;
+      }
+    }
+    
+    
     const buttonActions = [
       <FlatButton
         label='Cancelar'
@@ -27,9 +53,10 @@ class ModalNewBuy extends Component {
         }}
       />,
       <FlatButton
-        label='Comprar'
+        label='Reservar'
+        disabled={disableButton || this.state.client.length === 0}
         onClick={() => {
-          this.buyProduct();
+          this.buy();
           close();
         }}
       />
@@ -46,13 +73,37 @@ class ModalNewBuy extends Component {
       >
         <TextField
           fullWidth
-          floatingLabelText="Producto"
-          hintText="Producto"
-          value={quantity}
-          onChange={(e, v) => this.props.onChange(v)}
+          floatingLabelText="Cantidad máxima a elegir"
+          value={saler.product === undefined ? '' : saler.product.number}
+          disabled
+          onChange={(e, v) => null}
         />
 
-        <b>{JSON.stringify(this.props)}</b>
+        <TextField
+          fullWidth
+          floatingLabelText="Nombre"
+          hintText="Nombre"
+          value={this.state.client}
+          onChange={(e, v) => this.setState({ client: v })}
+        />
+
+        <TextField
+          fullWidth
+          floatingLabelText="Producto"
+          hintText="Producto"
+          value={quantity || ''}
+          onChange={(e, v) => {
+            if (!isNaN(v)) {
+              this.props.onChange(v)
+            }
+          }}
+        />
+
+        {
+          showMessage
+          ? <p style={{ color: 'orange' }}>Intenta comprar más productos de los que hay</p>
+          : null
+        }
       </Dialog>
     );
   }
@@ -61,7 +112,7 @@ class ModalNewBuy extends Component {
 ModalNewBuy.propTypes = {
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
-  idSaler: PropTypes.string.isRequired,
+  saler: PropTypes.object.isRequired,
   idProduct: PropTypes.string.isRequired,
   quantity: PropTypes.string.isRequired
 };

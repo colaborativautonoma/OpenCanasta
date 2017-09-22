@@ -29,7 +29,7 @@ class Clients extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      idSaler: null,
+      saler: null,
       idProduct: null,
       openModalBuy: false,
       quantity: '',
@@ -54,7 +54,7 @@ class Clients extends Component {
 
   resetStates() {
     this.setState({
-      idSaler: null,
+      saler: null,
       idProduct: null,
       openModalBuy: false,
       quantity: ''
@@ -93,7 +93,7 @@ class Clients extends Component {
                   onClick={() => this.setState({
                     openModalBuy: true,
                     idProduct: key,
-                    idSaler: saler.id
+                    saler: { id: saler.id, product: saler.products[key] }
                   })}
                 >
                   <ShopingIcon />
@@ -107,13 +107,13 @@ class Clients extends Component {
   }
 
   renderModalBuy() {
-    const { idProduct, idSaler, openModalBuy } = this.state;
+    const { idProduct, saler, openModalBuy } = this.state;
     return (
       <ModalBuy
         idProduct={idProduct === null ? '' : idProduct}
-        idSaler={idSaler === null ? '' : idSaler}
+        saler={saler === null ? {} : saler}
         open={this.state.openModalBuy}
-        close={() => this.setState({ openModalBuy: false })}
+        close={() => this.setState({ openModalBuy: false, quantity: '' })}
         onChange={v => this.setState({ quantity: v })}
         quantity={this.state.quantity}
       />
