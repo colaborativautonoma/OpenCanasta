@@ -5,6 +5,9 @@
   "repository": "https://gitlab.com/davidhv/openCanasta.git",
   "author": "David Higuita <david.higuita.75@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node serve.js"
+  },
   "dependencies": {
     "express": "^4.15.5"
   }
