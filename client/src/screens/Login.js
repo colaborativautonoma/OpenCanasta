@@ -47,9 +47,11 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'test@gmail.com',
-      password: 'abc123',
-      disableForm: false
+      email: '',
+      password: '',
+      disableForm: false,
+      error: false,
+      tryLogin: false
     };
   }
 
@@ -61,6 +63,9 @@ class Login extends Component {
       onAuthStateChanged((user) => {
         if (user) {
           setAdmin(user);
+          this.setState({ error: false });
+        } else {
+          this.setState({ error: true });
         }
         setLoading(false);
       });
@@ -81,11 +86,15 @@ class Login extends Component {
           onAuthStateChanged((user) => {
             if (user) {
               setAdmin(user);
+              this.setState({ error: false, tryLogin: true });
+            } else {
+              this.setState({ error: true, tryLogin: true });
             }
           });
         },
         catch: () => {
           setLoading(false);
+          this.setState({ error: true, tryLogin: true });
         },
       },
     });
@@ -108,7 +117,7 @@ class Login extends Component {
   }
 
   render() {
-    const { email, password, disableForm } = this.state;
+    const { email, password, disableForm, error, tryLogin } = this.state;
     const { admin, location, loading } = this.props;
     const isAdmin = Object.keys(admin).length > 0;
 
@@ -124,7 +133,6 @@ class Login extends Component {
           <CardHeader
             title="Canasta Campesina"
             subtitle="Ingreso de administradores"
-            avatar="../assets/lucha_campesina.jpeg"
           />
 
           <CardText>
@@ -146,6 +154,8 @@ class Login extends Component {
               onChange={(e, v) => this.setState({ password: v })}
               disabled={disableForm}
             />
+
+            { (tryLogin && error) ? <p>Error de ingreso</p> : null }
           </CardText>
 
           <CardActions style={styles.actions}>

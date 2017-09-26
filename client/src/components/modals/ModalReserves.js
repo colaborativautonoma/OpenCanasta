@@ -51,7 +51,6 @@ class ModalReserves extends Component {
         return null;
       }).filter(it => it !== null)[0]
     }));
-    console.log('completeReserves', completeReserves);
     if (this.props.reserves.length > 0) {
       return (
         <List>
@@ -132,7 +131,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   setReserves(reserves) {
-    console.log('setReserves', reserves);
     return dispatch(reservesAction(reserves));
   }
 });
