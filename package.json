@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node server.js",
-    "push:all": "git push origin master && git push colaborativa master && git push pagescolaborativa master && git push github master"
+    "push:all": "git push origin master && git push colaborativa master && git push pagescolaborativa master && git push github master && git push heroku master"
   },
   "dependencies": {
     "express": "^4.15.5"
