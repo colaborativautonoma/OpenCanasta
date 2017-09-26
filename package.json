@@ -6,7 +6,8 @@
   "author": "David Higuita <david.higuita.75@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node serve.js"
+    "start": "node server.js",
+    "push:all": "git push origin master && git push colaborativa master && git push pagescolaborativa master && git push github master"
   },
   "dependencies": {
     "express": "^4.15.5"
